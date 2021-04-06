@@ -1,4 +1,5 @@
 from cryptography.fernet import Fernet, InvalidToken
+import PySimpleGUI as sg
 
 
 def fernetDecrypt(input_file, key, output_file):
@@ -17,3 +18,5 @@ def fernetDecrypt(input_file, key, output_file):
 
     except:
         print("Invalid Key")
+        layout = [sg.Text("INVALID KEY"), ]
+        sg.popup('INVALID KEY')
