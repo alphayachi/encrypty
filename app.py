@@ -27,8 +27,10 @@ file_column = [
 
 password_column = [
     [sg.Image(key="-ENCRYPTED IMAGE-", pad=(0, (0, 40)))],
-    [sg.Text("Password", key="-PASSWORD TEXT-", font=('Helvetica', 11)),
-     sg.Input(password_char="*", key="-PASSWORD INPUT-")],
+    [sg.ProgressBar(1, orientation='h', size=(20, 20),
+                    key='-PROGRESS-', visible=False, pad=((60, 0), (0, 20)))],
+    [sg.Text("Password", key="-PASSWORD TEXT-", font=('Helvetica', 11), size=(8, 1)),
+     sg.Input(password_char="*", key="-PASSWORD INPUT-", size=(40, 1))],
     [sg.Text("*Password length should be atleast 7", font=(
         'Helvetica', 9), key="-ERR PASSLEN-", visible=False, justification='right')],
     [sg.Text("*Choose a file first", font=('Helvetica', 9),
@@ -54,7 +56,7 @@ window = sg.Window("ENCRYPTY", layout)
 
 # Run the Event Loop
 while True:
-    event, values = window.read(timeout=400)
+    event, values = window.read()
 
     if event == "Exit" or event == sg.WIN_CLOSED:
         break
@@ -100,9 +102,17 @@ while True:
                 window["-ERR PASSLEN-"].update(visible=False)
                 password = passgen(password_provided)
                 window["-PASSWORD INPUT-"].update("")
+                print("starting progress bar")
+                # window["-PROGRESS-"].update(visible=True)
                 print("Encrypting ....")
-                fernetEncrypt(input_file, password, output_file)
+                for i in range(4000):
+                    if i == 1500:
+                        fernetEncrypt(input_file, password, output_file)
+                    i = i+1
+                    window["-PROGRESS-"].update(i+1, 4000, visible=True)
+
                 print("Successful Encryption")
+                window["-PROGRESS-"].update(1, 4000, visible=False)
             elif not input_file:
                 window["-ERR NOFILE-"].update(visible=True)
             elif len(password_provided) < 7:
@@ -125,8 +135,16 @@ while True:
             if len(password_provided) >= 7 and input_file:
                 password = passgen(password_provided)
                 window["-PASSWORD INPUT-"].update("")
-                fernetDecrypt(input_file, password, output_file)
+                #fernetDecrypt(input_file, password, output_file)
+
+                for i in range(4000):
+                    if i == 1500:
+                        fernetDecrypt(input_file, password, output_file)
+                    i = i+1
+                    window["-PROGRESS-"].update(i+1, 4000, visible=True)
+
                 print("Successful Decryption")
+                window["-PROGRESS-"].update(1, 4000, visible=False)
 
         except:
             print("Failed Encryption")
