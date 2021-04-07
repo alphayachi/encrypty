@@ -6,6 +6,7 @@ import os.path
 from utils.keygenerator import passgen
 from utils.fernetencrypt import fernetEncrypt
 from utils.fernetdecrypt import fernetDecrypt
+from utils.keygenerator import decPassgen
 
 
 sg.theme('Reddit')
@@ -22,6 +23,10 @@ file_column = [
               key="-FILE-", visible=False),
         sg.FileBrowse("Browse", font=('Helvetica', 11), size=(15, 2)),
     ],
+    [sg.Checkbox("I know what I am doing", font=(
+        'Helvetica', 11), enable_events=True, key="-ADVANCED SETTINGS-")],
+    [sg.Combo(['Fernet (recommended)', 'AES-CBC'], default_value='Fernet (recommended)',
+              size=(30, 2), enable_events=True, key="-CIPHER CHOICE-", visible=False)],
 ]
 
 
@@ -89,7 +94,7 @@ while True:
             # input_file = os.path.join(
             #    values["-FOLDER-"], values["-FILE LIST-"][0]
             # )
-            #filename = 'D:/VS Codes/Encrypt/test.txt'
+            # filename = 'D:/VS Codes/Encrypt/test.txt'
             input_file = values["-FILE-"]
 
             password_provided = values["-PASSWORD INPUT-"]
@@ -100,14 +105,17 @@ while True:
             print(output_file)
             if len(password_provided) >= 7 and input_file:
                 window["-ERR PASSLEN-"].update(visible=False)
-                password = passgen(password_provided)
+
                 window["-PASSWORD INPUT-"].update("")
                 print("starting progress bar")
                 # window["-PROGRESS-"].update(visible=True)
                 print("Encrypting ....")
+
                 for i in range(4000):
-                    if i == 1500:
-                        fernetEncrypt(input_file, password, output_file)
+                    if i == 1000:
+                        key, salt = passgen(password_provided, 32)
+                    if i == 3000:
+                        fernetEncrypt(input_file, key, salt, output_file)
                     i = i+1
                     window["-PROGRESS-"].update(i+1, 4000, visible=True)
 
@@ -125,7 +133,7 @@ while True:
         print("Decrypting event")
         try:
             input_file = values["-FILE-"]
-            #filename = 'D:/VS Codes/Encrypt/test.txt'
+            # filename = 'D:/VS Codes/Encrypt/test.txt'
             password_provided = values["-PASSWORD INPUT-"]
             output_file = values["-DECRYPT-"]
             filename, extension = os.path.splitext(input_file)
@@ -133,13 +141,22 @@ while True:
             output_file += extension
             print(output_file)
             if len(password_provided) >= 7 and input_file:
-                password = passgen(password_provided)
+                with open(file, 'rb') as f:
+                    data = f.read()
+                salt = data[:16]
+
                 window["-PASSWORD INPUT-"].update("")
-                #fernetDecrypt(input_file, password, output_file)
+                # fernetDecrypt(input_file, password, output_file)
 
                 for i in range(4000):
+                    if i == 700:
+                        with open(file, 'rb') as f:
+                            data = f.read()
+                        salt = data[:16]
                     if i == 1500:
-                        fernetDecrypt(input_file, password, output_file)
+                        key = decPassgen(password_provided, 32, salt)
+                    if i == 3000:
+                        fernetDecrypt(input_file, key, output_file)
                     i = i+1
                     window["-PROGRESS-"].update(i+1, 4000, visible=True)
 
@@ -148,6 +165,13 @@ while True:
 
         except:
             print("Failed Encryption")
+
+    elif event == "-ADVANCED SETTINGS-":
+        if window["-ADVANCED SETTINGS-"].get():
+            window["-CIPHER CHOICE-"].update(visible=True)
+        else:
+            window["-CIPHER CHOICE-"].update(
+                value="Fernet (recommended)", visible=False)
 
     print(event, values)
 
