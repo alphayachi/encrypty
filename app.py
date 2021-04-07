@@ -3,10 +3,11 @@
 import PySimpleGUI as sg
 import os.path
 
-from utils.keygenerator import passgen
+from utils.keygenerator import passgen, decPassgen
 from utils.fernetencrypt import fernetEncrypt
 from utils.fernetdecrypt import fernetDecrypt
-from utils.keygenerator import decPassgen
+from utils.SymmetricEncryption import aesEncrypt
+from utils.SymmetricDecryption import aesDecrypt
 
 
 sg.theme('Reddit')
@@ -24,7 +25,7 @@ file_column = [
         sg.FileBrowse("Browse", font=('Helvetica', 11), size=(15, 2)),
     ],
     [sg.Checkbox("I know what I am doing", font=(
-        'Helvetica', 11), enable_events=True, key="-ADVANCED SETTINGS-")],
+        'Helvetica', 11), enable_events=True, key="-ADVANCED SETTINGS-", pad=(0, (30, 15)))],
     [sg.Combo(['Fernet (recommended)', 'AES-CBC'], default_value='Fernet (recommended)',
               size=(30, 2), enable_events=True, key="-CIPHER CHOICE-", visible=False)],
 ]
@@ -113,9 +114,16 @@ while True:
 
                 for i in range(4000):
                     if i == 1000:
-                        key, salt = passgen(password_provided, 32)
+                        if values["-CIPHER CHOICE-"] == "AES-CBC" and values["-ADVANCED SETTINGS-"]:
+                            key, salt = passgen(password_provided, 16)
+                        else:
+                            key, salt = passgen(password_provided, 32)
+
                     if i == 3000:
-                        fernetEncrypt(input_file, key, salt, output_file)
+                        if values["-CIPHER CHOICE-"] == "AES-CBC" and values["-ADVANCED SETTINGS-"]:
+                            aesEncrypt(input_file, key, salt, output_file)
+                        else:
+                            fernetEncrypt(input_file, key, salt, output_file)
                     i = i+1
                     window["-PROGRESS-"].update(i+1, 4000, visible=True)
 
@@ -154,9 +162,17 @@ while True:
                             data = f.read()
                         salt = data[:16]
                     if i == 1500:
-                        key = decPassgen(password_provided, 32, salt)
+                        if values["-CIPHER CHOICE-"] == "AES-CBC" and values["-ADVANCED SETTINGS-"]:
+                            key = decPassgen(password_provided, 16, salt)
+                        else:
+                            key = decPassgen(password_provided, 32, salt)
+
                     if i == 3000:
-                        fernetDecrypt(input_file, key, output_file)
+                        if values["-CIPHER CHOICE-"] == "AES-CBC" and values["-ADVANCED SETTINGS-"]:
+                            aesDecrypt(data, key, output_file)
+                        else:
+                            fernetDecrypt(input_file, key, output_file)
+
                     i = i+1
                     window["-PROGRESS-"].update(i+1, 4000, visible=True)
 
@@ -167,7 +183,7 @@ while True:
             print("Failed Encryption")
 
     elif event == "-ADVANCED SETTINGS-":
-        if window["-ADVANCED SETTINGS-"].get():
+        if values["-ADVANCED SETTINGS-"]:
             window["-CIPHER CHOICE-"].update(visible=True)
         else:
             window["-CIPHER CHOICE-"].update(

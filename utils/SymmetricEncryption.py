@@ -4,7 +4,7 @@ from cryptography.hazmat.primitives import padding
 
 
 def aesEncrypt(input_file, key, salt, output_file):
-    #key = b'S\x04\xe5s\x12\xdb\xbac;A%"\x9c\xb1Y\x92'
+    print("AES-CBC ENCRYPTION")
     iv = os.urandom(16)
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
     encryptor = cipher.encryptor()
@@ -21,3 +21,4 @@ def aesEncrypt(input_file, key, salt, output_file):
 
     with open(output_file, 'wb') as f:
         f.write(encrypted)
+    print("AES-CBC ENCRYPTION SUCCESSFUL")
