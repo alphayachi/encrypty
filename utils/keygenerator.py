@@ -23,7 +23,6 @@ def passgen(password_provided, passlen):
     return key, salt
 
 
-
 def decPassgen(password_provided, passlen, salt):
     password = password_provided.encode()
 
@@ -34,4 +33,31 @@ def decPassgen(password_provided, passlen, salt):
         iterations=100000,
     )
     key = base64.urlsafe_b64encode(kdf.derive(password))
+    return key
+
+
+def chachaPassgen(password_provided, passlen):
+    password = password_provided.encode()
+    salt = os.urandom(16)
+
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256,
+        length=passlen,
+        salt=salt,
+        iterations=100000,
+    )
+    key = kdf.derive(password)
+    return key, salt
+
+
+def chachadecPassgen(password_provided, passlen, salt):
+    password = password_provided.encode()
+
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256,
+        length=passlen,
+        salt=salt,
+        iterations=100000,
+    )
+    key = kdf.derive(password)
     return key
