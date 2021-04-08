@@ -15,8 +15,10 @@ The application has a checkbox which says 'Help me out here'. Click on it to mak
 
 DISCLAIMER: USE IT WISELY. DON'T TRY TO ENCRYPT FILES WHICH DON'T BELONG TO YOU. BY USING THIS APPLICATION YOU ARE TAKING FULL RESPONSIBILITY FOR THE CONSEQUENCES OF ITS USAGE.
 
-![Encrypy image options](https://user-images.githubusercontent.com/62387039/114082305-3337a580-98cb-11eb-943c-896b5aebd3e8.png)
+![Encrypy image](https://user-images.githubusercontent.com/62387039/114082452-611cea00-98cb-11eb-9432-a8d19e828464.png)
+
 ![Encrypy image options](https://user-images.githubusercontent.com/62387039/114082328-3af74a00-98cb-11eb-8a32-e9612c0ab3d0.png)
+
 ![Encrypy image encrypted](https://user-images.githubusercontent.com/62387039/114082351-4185c180-98cb-11eb-8046-336bac1af908.png)
 
 
