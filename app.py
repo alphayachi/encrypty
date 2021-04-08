@@ -31,7 +31,7 @@ file_column = [
               default_value='Fernet (recommended)', enable_events=True, key="-CIPHER CHOICE-", disabled=True)],
     [sg.Checkbox("Help me out here please", font=(
                  'Arial', 11), enable_events=True, key="-INSTRUCTIONS BOOL-", pad=(0, (15, 15)))],
-    [sg.Multiline(default_text="INSTRUCTIONS \n\n1. Choose a file from your computer. \n\n2. (Not necessary) Select 'I know what I am doing' if you want to choose your own cipher. \n\n3. Set password (at least 7 characters), In some ciphers you might need to enter an associated data. \n\n4. Choose whether you want to Encrypt/Decrypt the file and choose the directory where you want to save it to. ",
+    [sg.Multiline(default_text="INSTRUCTIONS \n\n1. Choose a file from your computer. \n\n2. (Not necessary) Select 'I know what I am doing' if you want to choose your own cipher. \n\n3. Set password (at least 7 characters). In some ciphers you might need to enter an associated data. \n\n4. Choose whether you want to Encrypt/Decrypt the file and choose the save directory. ",
                   size=(40, 8), disabled=True, font='courier', key='-INSTRUCTIONS-', auto_size_text=True, visible=False)],
 ]
 
