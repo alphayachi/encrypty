@@ -109,6 +109,7 @@ while True:
             filename, extension = os.path.splitext(input_file)
 
             if len(password_provided) >= 7 and input_file and output_file:
+                window["-ERR NOFILE-"].update(visible=False)
                 of = os.path.basename(output_file)
                 of += extension
                 window["-ENC FILE-"].update(of)
@@ -147,7 +148,8 @@ while True:
                 print("Successful Encryption")
                 window["-PROGRESS-"].update(1, 4000, visible=False)
                 window["-ENCRYPT-"].update("")
-            elif not input_file:
+                output_file = ''
+            elif not input_file or not output_file:
                 window["-ERR NOFILE-"].update(visible=True)
             elif len(password_provided) < 7:
                 window["-ERR PASSLEN-"].update(visible=True)
@@ -165,6 +167,7 @@ while True:
             filename, extension = os.path.splitext(input_file)
 
             if input_file and output_file:
+                window["-ERR NOFILE-"].update(visible=False)
                 print("Adding extension")
                 output_file += extension
                 print(output_file)
@@ -205,6 +208,8 @@ while True:
                     window["-PROGRESS-"].update(i+1, 4000, visible=True)
 
                 print("Successful Decryption")
+                output_file = ''
+                window["-DECRYPT-"].update("")
                 window["-PROGRESS-"].update(1, 4000, visible=False)
             else:
                 window["-ERR NOFILE-"].update(visible=True)
