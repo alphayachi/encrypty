@@ -214,7 +214,7 @@ while True:
 
     elif event == "-ADVANCED SETTINGS-":
         if values["-ADVANCED SETTINGS-"]:
-            window["-CIPHER CHOICE-"].update(disabled=False)
+            window["-CIPHER CHOICE-"].update(disabled=False, readonly=True)
         else:
             window["-CIPHER CHOICE-"].update(
                 value="Fernet (recommended)", disabled=True)
