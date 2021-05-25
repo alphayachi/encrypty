@@ -3,7 +3,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import PySimpleGUI as sg
 from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
 from cryptography.fernet import Fernet, InvalidToken
-
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 
 def fernetDecrypt(input_file, key, output_file):
@@ -13,7 +13,7 @@ def fernetDecrypt(input_file, key, output_file):
     actualdata = data[16:]
     fernet = Fernet(key)
 
-    #output_file = f"Dec-{input_file}"
+    # output_file = f"Dec-{input_file}"
 
     try:
 
@@ -43,16 +43,32 @@ def aesDecrypt(data, key, output_file):
         sg.popup('INVALID KEY')
 
 
-def chacha20poly1305Decrypt(data, key, aad, output_file):
-    print("CHACHA20POLY1305 DECRYPTION")
-    chacha = ChaCha20Poly1305(key)
+def aesgcmDecrypt(data, key, aad, output_file):
+    print("AES-GCM DECRYPTION")
+    aesgcm = AESGCM(key)
     nonce = data[-12:]
     actualdata = data[16:-12]
     try:
-        decrypted = chacha.decrypt(nonce, actualdata, aad)
+        decrypted = aesgcm.decrypt(nonce, actualdata, aad)
         with open(output_file, 'wb') as f:
             f.write(decrypted)
-        print("CHACHA20POLY1305 DECRYPTION SUCCESSFUL")
+        print("AES-GCM DECRYPTION SUCCESSFUL")
     except:
         print("EITHER INVALID KEY OR INVALID ASSOCIATED DATA")
         sg.popup('EITHER INVALID KEY OR INVALID ASSOCIATED DATA')
+
+
+def tdesDecrypt(data, key, output_file):
+    print("Triple DES DECRYPTION")
+    actualdata = data[16:-16]
+    iv = data[-16:]
+    cipher = Cipher(algorithms.TripleDES(key), modes.CBC(iv))
+    decryptor = cipher.decryptor()
+    try:
+        decrypted = decryptor.update(actualdata) + decryptor.finalize()
+        with open(output_file, 'wb') as f:
+            f.write(decrypted)
+        print("Triple DES DECRYPTION SUCCESSFUL")
+    except:
+        print("INVALID KEY")
+        sg.popup('INVALID KEY')

@@ -27,7 +27,7 @@ file_column = [
     ],
     [sg.Checkbox("What are my options", font=(
         'Arial', 11), enable_events=True, key="-ADVANCED SETTINGS-", pad=(0, (30, 7)))],
-    [sg.Combo(['Fernet (recommended)', 'AES-CBC', 'ChaCha20Poly1305'],
+    [sg.Combo(['Fernet (recommended)', 'AES-CBC', 'ChaCha20Poly1305', 'AES-GCM'],
               default_value='Fernet (recommended)', enable_events=True, key="-CIPHER CHOICE-", disabled=True)],
     [sg.Checkbox("Help me out here please", font=(
                  'Arial', 11), enable_events=True, key="-INSTRUCTIONS BOOL-", pad=(0, (15, 15)))],
@@ -129,6 +129,9 @@ while True:
                             key, salt = passgen(password_provided, 16)
                         elif values["-CIPHER CHOICE-"] == "ChaCha20Poly1305" and values["-ADVANCED SETTINGS-"]:
                             key, salt = chachaPassgen(password_provided, 32)
+                        elif values["-CIPHER CHOICE-"] == "AES-GCM" and values["-ADVANCED SETTINGS-"]:
+                            key, salt = chachaPassgen(password_provided, 32)
+                            print("pass generated ********")
                         else:
                             key, salt = passgen(password_provided, 32)
 
@@ -140,6 +143,11 @@ while True:
                             aad = aadmessage.encode()
                             chacha20poly1305Encrypt(
                                 input_file, key, salt, aad, output_file)
+                        elif values["-CIPHER CHOICE-"] == "AES-GCM" and values["-ADVANCED SETTINGS-"]:
+                            aadmessage = values["-AAD-"]
+                            aad = aadmessage.encode()
+                            aesgcmEncrypt(input_file, key, salt,
+                                          aad, output_file)
                         else:
                             fernetEncrypt(input_file, key, salt, output_file)
                     i = i+1
@@ -190,6 +198,8 @@ while True:
                             key = decPassgen(password_provided, 16, salt)
                         elif values["-CIPHER CHOICE-"] == "ChaCha20Poly1305" and values["-ADVANCED SETTINGS-"]:
                             key = chachadecPassgen(password_provided, 32, salt)
+                        elif values["-CIPHER CHOICE-"] == "AES-GCM" and values["-ADVANCED SETTINGS-"]:
+                            key = chachadecPassgen(password_provided, 32, salt)
                         else:
                             key = decPassgen(password_provided, 32, salt)
 
@@ -201,6 +211,10 @@ while True:
                             aad = aadmessage.encode()
                             chacha20poly1305Decrypt(
                                 data, key, aad, output_file)
+                        elif values["-CIPHER CHOICE-"] == "AES-GCM" and values["-ADVANCED SETTINGS-"]:
+                            aadmessage = values["-AAD-"]
+                            aad = aadmessage.encode()
+                            aesgcmDecrypt(data, key, aad, output_file)
                         else:
                             fernetDecrypt(input_file, key, output_file)
 
@@ -226,7 +240,7 @@ while True:
             window["-AAD-"].update(visible=False)
             window["-AAD TEXT-"].update(visible=False)
     elif event == "-CIPHER CHOICE-":
-        if values["-CIPHER CHOICE-"] == "ChaCha20Poly1305":
+        if values["-CIPHER CHOICE-"] == "ChaCha20Poly1305" or values["-CIPHER CHOICE-"] == "AES-GCM":
             window["-AAD-"].update(visible=True)
             window["-AAD TEXT-"].update(visible=True)
         else:
