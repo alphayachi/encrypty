@@ -26,7 +26,7 @@ The application currently has three Encryptions to choose from:
 
 ![Encrypy image](https://user-images.githubusercontent.com/62387039/114082452-611cea00-98cb-11eb-9432-a8d19e828464.png)
 
-![Encrypy image options](https://user-images.githubusercontent.com/62387039/114082328-3af74a00-98cb-11eb-8a32-e9612c0ab3d0.png)
+![encrypty image](https://user-images.githubusercontent.com/62387039/119491586-b7f75980-bd7b-11eb-9ee4-d6d5c1e5397e.png)
 
 ![Encrypy image encrypted](https://user-images.githubusercontent.com/62387039/114082351-4185c180-98cb-11eb-8046-336bac1af908.png)
 
