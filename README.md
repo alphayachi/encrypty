@@ -19,12 +19,10 @@ The application currently has three Encryptions to choose from:
 1. Fernet (symmetric encryption), uses PBKDF2HMAC as key derivation function. Fernet is built on AES-CBC (128-bit key) and PKCS7 for padding. It is the most secure in the list but also the most slowest.
 2. AES-CBC - AES is both fast, and cryptographically strong. Although Fernet is stronger than vanilla AES-CBC, AES-CBC provides a reasonable security with a faster performance for encrypting and decrypting. You can use this encryption instead of Fernet for faster encryption.
 3. ChaCha20Poly1305, Authenticated encryption with associated data (AEAD). It provides strong integrity for the data, has an associated text with it. The associated text including the whitespaces must be the same while decrypting. This cipher uses a 32 byte key.
+4. AES-GCM - AES with GCM mode is secure and fast and requires an associated data for maintaining the integrity of the data. This is recommended over AES-CBC.
+5. Triple DES - This mode is not recommended beacuse even though it is secure, it is very slow and AES-GCM would be a better choice over it, in respect of both performance and security.
 
 *All these ciphers use custom passwords which undergo key generator functions for the convenience of the user.
-
-Future Updates: 
-1. AES-GCM, will explain once updated.
-2. 3DES, will explain once updated.
 
 ![Encrypy image](https://user-images.githubusercontent.com/62387039/114082452-611cea00-98cb-11eb-9432-a8d19e828464.png)
 
