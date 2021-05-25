@@ -60,8 +60,8 @@ def aesgcmDecrypt(data, key, aad, output_file):
 
 def tdesDecrypt(data, key, output_file):
     print("Triple DES DECRYPTION")
-    actualdata = data[16:-16]
-    iv = data[-16:]
+    actualdata = data[16:-8]
+    iv = data[-8:]
     cipher = Cipher(algorithms.TripleDES(key), modes.CBC(iv))
     decryptor = cipher.decryptor()
     try:

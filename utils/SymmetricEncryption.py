@@ -82,20 +82,17 @@ def aesgcmEncrypt(input_file, key, salt, aad, output_file):
 
 def tdesEncrypt(input_file, key, salt, output_file):
     print("Triple DES ENCRYPTION")
-    iv = os.urandom(16)
+    iv = os.urandom(8)
     cipher = Cipher(algorithms.TripleDES(key), modes.CBC(iv))
     encryptor = cipher.encryptor()
-
     with open(input_file, 'rb') as f:
         data = f.read()
 
-    padder = padding.PKCS7(128).padder()
+    padder = padding.PKCS7(64).padder()
     padded_data = padder.update(data)
     padded_data += padder.finalize()
-
     encrypted = encryptor.update(padded_data) + encryptor.finalize()
     encrypted = salt + encrypted + iv
-
     with open(output_file, 'wb') as f:
         f.write(encrypted)
     print("Triple DES ENCRYPTION SUCCESSFUL")

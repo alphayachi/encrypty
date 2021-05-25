@@ -27,7 +27,7 @@ file_column = [
     ],
     [sg.Checkbox("What are my options", font=(
         'Arial', 11), enable_events=True, key="-ADVANCED SETTINGS-", pad=(0, (30, 7)))],
-    [sg.Combo(['Fernet (recommended)', 'AES-CBC', 'ChaCha20Poly1305', 'AES-GCM'],
+    [sg.Combo(['Fernet (recommended)', 'AES-CBC', 'ChaCha20Poly1305', 'AES-GCM', 'Triple DES'],
               default_value='Fernet (recommended)', enable_events=True, key="-CIPHER CHOICE-", disabled=True)],
     [sg.Checkbox("Help me out here please", font=(
                  'Arial', 11), enable_events=True, key="-INSTRUCTIONS BOOL-", pad=(0, (15, 15)))],
@@ -127,17 +127,20 @@ while True:
                     if i == 1000:
                         if values["-CIPHER CHOICE-"] == "AES-CBC" and values["-ADVANCED SETTINGS-"]:
                             key, salt = passgen(password_provided, 16)
+                        elif values["-CIPHER CHOICE-"] == "Triple DES" and values["-ADVANCED SETTINGS-"]:
+                            key, salt = passgen(password_provided, 16)
                         elif values["-CIPHER CHOICE-"] == "ChaCha20Poly1305" and values["-ADVANCED SETTINGS-"]:
                             key, salt = chachaPassgen(password_provided, 32)
                         elif values["-CIPHER CHOICE-"] == "AES-GCM" and values["-ADVANCED SETTINGS-"]:
                             key, salt = chachaPassgen(password_provided, 32)
-                            print("pass generated ********")
                         else:
                             key, salt = passgen(password_provided, 32)
 
                     if i == 3000:
                         if values["-CIPHER CHOICE-"] == "AES-CBC" and values["-ADVANCED SETTINGS-"]:
                             aesEncrypt(input_file, key, salt, output_file)
+                        elif values["-CIPHER CHOICE-"] == "Triple DES" and values["-ADVANCED SETTINGS-"]:
+                            tdesEncrypt(input_file, key, salt, output_file)
                         elif values["-CIPHER CHOICE-"] == "ChaCha20Poly1305" and values["-ADVANCED SETTINGS-"]:
                             aadmessage = values["-AAD-"]
                             aad = aadmessage.encode()
@@ -196,6 +199,8 @@ while True:
                     if i == 1500:
                         if values["-CIPHER CHOICE-"] == "AES-CBC" and values["-ADVANCED SETTINGS-"]:
                             key = decPassgen(password_provided, 16, salt)
+                        elif values["-CIPHER CHOICE-"] == "Triple DES" and values["-ADVANCED SETTINGS-"]:
+                            key = decPassgen(password_provided, 16, salt)
                         elif values["-CIPHER CHOICE-"] == "ChaCha20Poly1305" and values["-ADVANCED SETTINGS-"]:
                             key = chachadecPassgen(password_provided, 32, salt)
                         elif values["-CIPHER CHOICE-"] == "AES-GCM" and values["-ADVANCED SETTINGS-"]:
@@ -206,6 +211,8 @@ while True:
                     if i == 3000:
                         if values["-CIPHER CHOICE-"] == "AES-CBC" and values["-ADVANCED SETTINGS-"]:
                             aesDecrypt(data, key, output_file)
+                        elif values["-CIPHER CHOICE-"] == "Triple DES" and values["-ADVANCED SETTINGS-"]:
+                            tdesDecrypt(data, key, output_file)
                         elif values["-CIPHER CHOICE-"] == "ChaCha20Poly1305" and values["-ADVANCED SETTINGS-"]:
                             aadmessage = values["-AAD-"]
                             aad = aadmessage.encode()
