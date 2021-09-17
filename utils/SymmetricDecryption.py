@@ -43,6 +43,21 @@ def aesDecrypt(data, key, output_file):
         sg.popup('INVALID KEY')
 
 
+def chacha20poly1305Decrypt(data, key, aad, output_file):
+    print("Chacha Decrypt")
+    nonce = data[-12:]
+    actualdata = data[16:-12]
+    chacha = ChaCha20Poly1305(key)
+    try:
+        decrypted = chacha.decrypt(nonce, actualdata, aad)
+        with open(output_file, 'wb') as f:
+            f.write(decrypted)
+        print("Chacha Decryption Successful")
+    except:
+        print("EITHER INVALID KEY OR INVALID ASSOCIATED DATA")
+        sg.popup('EITHER INVALID KEY OR INVALID ASSOCIATED DATA')
+
+
 def aesgcmDecrypt(data, key, aad, output_file):
     print("AES-GCM DECRYPTION")
     aesgcm = AESGCM(key)
